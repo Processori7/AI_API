@@ -1,0 +1,6 @@
+uvicorn 
+aiohttp 
+fastapi 
+freeGPT 
+pydantic 
+starlette

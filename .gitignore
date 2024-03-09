@@ -1,0 +1,6 @@
+ngrok.exe
+ngrok.TXT
+venv
+.idea
+__pycache__
+.git
