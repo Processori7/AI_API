@@ -6,8 +6,19 @@ from fastapi import FastAPI, HTTPException
 from freeGPT import AsyncClient
 from pydantic import BaseModel
 from starlette.responses import RedirectResponse
+import socket
 
-# uvicorn main:app --reload
+def get_local_ip():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 1))
+        IP = s.getsockname()[0]
+    except socket.error as err:
+        print(f"Socket error: {err}")
+        IP = "127.0.0.1"
+    finally:
+        s.close()
+    return IP
 
 # Initialize the app
 app = FastAPI()
@@ -28,23 +39,25 @@ async def main(prompt):
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
-@app.get('/', response_class=RedirectResponse, status_code=307)
+@app.get('/', response_class=RedirectResponse, status_code=307, include_in_schema=False)
 async def welcome():
-    url = 'http://localhost:8000/docs'
+    try:
+        ip = get_local_ip()
+    except Exception as e:
+        return {"error": f"Failed to get local IP: {e}"}
+    url = f'http://{ip}:8000/docs'
     return RedirectResponse(url=url)
 
 @app.get('/api/models')
 async def getModels():
-    return "Working Models: 1.gpt3"
+    return "Working Model: 1.gpt3"
 
 class QuestionModel(BaseModel):
     question: str
 
 @app.post("/api/gpt/ans")
 async def getAnswer(data: QuestionModel) -> Any:
-    # Теперь вопрос извлекается из тела запроса
     question = data.question
-
     try:
         result = await main(question)
         return {"result": result}
@@ -54,4 +67,8 @@ async def getAnswer(data: QuestionModel) -> Any:
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    try:
+        ip = get_local_ip()
+        uvicorn.run(app, host=ip, port=8000)
+    except Exception as e:
+        print(f"Failed to start the server: {e}")
