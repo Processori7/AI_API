@@ -1,5 +1,5 @@
 # Description:
-This is an API for working with ChatGPT, based on the freeGPT library.
+This is an API for working with ChatGPT, based on the webscout library.
 # Usage:
 ```
 git clone https://github.com/Processori7/AI_API.git
@@ -19,7 +19,7 @@ pip install -r requirements.txt
 ## Then open the project folder in Pycharm and run it, check that the virtual environment is active, after that you can use the API on the local network.
 
 # Описание:
-Это АПИ для работы с ЧатGPT, основанное на библиотеке freeGPT. 
+Это АПИ для работы с ChatGPT, основанное на библиотеке Webscout. 
 # Использование:
 ```
 git clone https://github.com/Processori7/AI_API.git

@@ -1,6 +1,8 @@
 uvicorn 
 aiohttp 
 fastapi 
-freeGPT 
+webscout
 pydantic 
 starlette
+psutil
+huggingface_hub
